@@ -1,5 +1,7 @@
 # Usage
 This open cti service is the one being used by our project to fetch data from the open cti platform using the open cti api.
+# IMPORTANT:
+run **docker network create open-cti-network** before running the container to make sure the open cti container is reachable to get info pulled from.  
 
 # To run:
 
