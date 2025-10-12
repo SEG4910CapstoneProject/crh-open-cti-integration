@@ -128,6 +128,8 @@ services:
       - HTTP_PROXY=${HTTP_PROXY:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
       - HTTPS_PROXY=${HTTPS_PROXY:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
       - NO_PROXY=elasticsearch,redis,rabbitmq,minio,opencti # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - REQUESTS_CA_BUNDLE=${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - SSL_CERT_FILE=${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     ports:
       - "8080:8080"
     depends_on:
@@ -147,6 +149,8 @@ services:
       retries: 20
     networks:
       - open-cti-network
+    volumes:
+      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem
   worker:
     image: opencti/worker:6.5.0
     environment:
