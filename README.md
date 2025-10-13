@@ -7,28 +7,31 @@ run **docker network create open-cti-network** before running the container to m
 
 1- Clone the **crh-open-cti-integration** repository.
 
-2- Once inside the **crh-open-cti-integration** folder, run: **docker compose up -d**
+2- Once inside the **crh-open-cti-integration** folder, run: **docker compose build**
 
-3- Wait few minutes until the web app is up and running. 
+3- Once inside the **crh-open-cti-integration** folder, run: **docker compose up -d**
 
-4- Even if the web app is up, you might not see data; this is because the built in data ingestor; **alien-vault** may take up to 10 minutes to finish ingesting data, so be patient.
+4- Wait few minutes until the web app is up and running. 
 
-5- Once you start to see some data, check the **Data/Ingestion/RSS feeds**; if **Bleeping Computer** isnt present. Add it using the remaining steps.
+5- Even if the web app is up, you might not see data; this is because the built in data ingestor; **alien-vault** may take up to 2 hours to finish ingesting data, so be patient.
 
-![alt text](image.png)
+You can change the date starting which information will be ingested for alienvault, you can change **ALIENVAULT_PULSE_START_TIMESTAMP** to a more recent date.
 
+6- Once you start to see some data, check Data -> Ingestion -> Monitoring -> AlienVault. It is advisable to not change anything else until the ingestion finishes for that connector.
 
-6- Go to Settings/Security/Users, and add a new user using the plus button at the bottom right:
-![alt text](image-1.png)
+7- Once ingestion is done for the alienvault connector, check the **Data/Ingestion/RSS feeds**; if **Bleeping Computer** isn't present. Add it using the remaining steps.
 
-7- After filling the information, the end result should look like the screenshot. 
- ![alt text](image-2.png) 
+8- Go to Settings/Security/Users, and add a new user:
+![alt text](createNewUser.jpg)
 
-Important information: name: BleepingComputer -> email: bleep@opencti.io -> pwd: bleep2  -> groups: connectors
+9- After filling the information, the end result should look like the screenshot. (Make sure to specify that this user is a service account, that way you won't have to provide an email or a password.)
+ ![alt text](userCreated.jpg) 
 
-8- Back to Data/Ingestion/RSS Feeds, add **Bleeping Computer** as an RSS feed: (For the default author, click on the + icon to create a new author, and make it an organization)
+Important information: name: BleepingComputer -> groups: connectors
 
-![alt text](image-3.png)
+10- Back to Data/Ingestion/RSS Feeds, add **Bleeping Computer** as an RSS feed: (For the default author, click on the + icon to create a new author, and make it an organization)
+
+![alt text](rssAuthor.jpg)
 
 
 9- Then, click on the three dots to start the rss feed service:
