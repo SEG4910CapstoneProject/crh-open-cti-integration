@@ -7,15 +7,26 @@ run **docker network create open-cti-network** before running the container to m
 
 1- Clone the **crh-open-cti-integration** repository.
 
+2- If you want to use mitmproxy (dummy proxy), you can start the proxy using the following command: 
+
+**docker run --rm -it -p 3128:3128 -p 8888:8888 -v 'CHANGE PATH HERE ACCORDING TO YOUR SYSTEM\capstone\crh-developer-environment\certificates':/home/mitmproxy/.mitmproxy  mitmproxy/mitmproxy mitmweb --listen-port 3128 --web-port 8888 --web-host 0.0.0.0** from any service path
+
+(Contact the maintainers to get the certificates)
+
+If you have your own proxy, you don't need to create that proxy container, just use your proxy credentials in the .env file that is present in the open cti service folder, replace HTTP_PROXY and HTTPS_PROXY variables with your own. Also update the CERTIFICATE_LOCATION by putting the absolute path of that folder but that is relative to your machine and change the CERTIFICATE_PATH_CONTAINER as well. See the .env file.
+
+If you don't want to use proxies, life is easy! just comment all places in the docker-compose.yml that contain the comment: # CAUTION: COMMENT IF NOT USING PROXY SERVER. As those settings are only needed 
+when proxy is enabled.
+
 2- Once inside the **crh-open-cti-integration** folder, run: **docker compose build**
 
-3- Once inside the **crh-open-cti-integration** folder, run: **docker compose up -d**
+3- Once inside the **crh-open-cti-integration** folder, run: **docker compose up -d** (if elasticSearch isn't starting, try to reduce the value of ELASTIC_MEMORY_SIZE or increase the memory your system gives docker)
 
 4- Wait few minutes until the web app is up and running. 
 
 5- Even if the web app is up, you might not see data; this is because the built in data ingestor; **alien-vault** may take up to 2 hours to finish ingesting data, so be patient.
 
-You can change the date starting which information will be ingested for alienvault, you can change **ALIENVAULT_PULSE_START_TIMESTAMP** to a more recent date.
+You can change the date starting which information will be ingested for alienvault, you can change **ALIENVAULT_PULSE_START_TIMESTAMP** in docker-compose.yml to a more recent date to have things spin up quickly.
 
 6- Once you start to see some data, check Data -> Ingestion -> Monitoring -> AlienVault. It is advisable to not change anything else until the ingestion finishes for that connector.
 
@@ -34,11 +45,11 @@ Important information: name: BleepingComputer -> groups: connectors
 ![alt text](rssAuthor.jpg)
 
 
-9- Then, click on the three dots to start the rss feed service:
+11- Then, click on the three dots to start the rss feed service:
 
 ![alt text](image-4.png)
 
-10- You are good to go! more info on querying the open cti service can be found here: 
+12- You are good to go! more info on querying the open cti service can be found here: 
 
 # Resources: 
 
