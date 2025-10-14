@@ -4,7 +4,7 @@ services:
     image: alpine/openssl:3.5.2
     volumes:
       - rsakeys:/keys
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     entrypoint: ["/bin/ash"]
     command: ["-c", "if [ ! -f /keys/private_key.pem ]; then openssl genpkey -algorithm RSA -out /keys/private_key.pem -pkeyopt rsa_keygen_bits:4096; fi && tail -f /dev/null"]
     healthcheck:
@@ -28,7 +28,7 @@ services:
     restart: always
     volumes:
       - redisdata:/data
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -48,7 +48,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.19.2
     volumes:
       - esdata:/usr/share/elasticsearch/data
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     environment:
       # Comment-out the line below for a cluster of multiple nodes
       - discovery.type=single-node
@@ -84,7 +84,7 @@ services:
     image: minio/minio:RELEASE.2025-06-13T11-33-47Z
     volumes:
       - s3data:/data
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem  # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-}  # CAUTION: COMMENT IF NOT USING PROXY SERVER
     ports:
       - "9000:9000"
     environment:
@@ -121,7 +121,7 @@ services:
         source: ./rabbitmq.conf
         target: /etc/rabbitmq/rabbitmq.conf 
       - amqpdata:/var/lib/rabbitmq
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     restart: always
     healthcheck:
       test: rabbitmq-diagnostics -q ping
@@ -185,7 +185,7 @@ services:
     networks:
       - open-cti-network
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
 
   worker:
     image: opencti/worker:6.8.4
@@ -199,7 +199,7 @@ services:
       - REQUESTS_CA_BUNDLE=${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
       - SSL_CERT_FILE=${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     depends_on:
       opencti:
         condition: service_healthy
@@ -230,7 +230,7 @@ services:
       opencti:
         condition: service_healthy
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     networks:
       - open-cti-network
 
@@ -254,7 +254,7 @@ services:
       opencti:
         condition: service_healthy
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     networks:
       - open-cti-network
 
@@ -274,7 +274,7 @@ services:
       - REQUESTS_CA_BUNDLE=${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
       - SSL_CERT_FILE=${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     restart: always
     depends_on:
       opencti:
@@ -304,7 +304,7 @@ services:
       opencti:
         condition: service_healthy
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     networks:
       - open-cti-network
 
@@ -332,7 +332,7 @@ services:
       opencti:
         condition: service_healthy
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     networks:
       - open-cti-network
 
@@ -361,7 +361,7 @@ services:
     networks:
       - open-cti-network
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
 
   connector-alienvault:
     image: opencti/connector-alienvault:rolling
@@ -404,7 +404,7 @@ services:
       - SSL_CERT_FILE=${CERTIFICATE_PATH_CONTAINER:-} # CAUTION: COMMENT IF NOT USING PROXY SERVER
     restart: always
     volumes:
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem    # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-}    # CAUTION: COMMENT IF NOT USING PROXY SERVER
     networks:
       - open-cti-network
 
@@ -428,7 +428,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - rsakeys:/keys:ro  # RSA key mounted as read-only
-      - ${CERTIFICATE_LOCATION}:/tmp/mitmproxy-ca-cert.pem    # CAUTION: COMMENT IF NOT USING PROXY SERVER
+      - ${CERTIFICATE_LOCATION}:${CERTIFICATE_PATH_CONTAINER:-}    # CAUTION: COMMENT IF NOT USING PROXY SERVER
     depends_on:
       rsa-key-generator:
         condition: service_healthy
